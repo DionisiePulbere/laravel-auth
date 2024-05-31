@@ -3,6 +3,9 @@
 @section('content')
     <h2>{{ $project->name }}</h2>
     <div>
+        <strong>ID:</strong> {{ $project->id }}
+    </div>
+    <div>
         <strong>Slug:</strong> {{ $project->slug }}
     </div>
     <div>
