@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Project;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ProjectController extends Controller
 {
@@ -38,11 +39,19 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-       $formData = $request->all();
-       $newProject = new Project();
-       $newProject->fill($formData);
-       $newProject->slug = Str::slug($newProject->name, '-');
-       $newProject->save();
+        $validated = $request->validate(
+            [
+                'name' => 'required|min:4|max:150|unique',
+                'summary' => 'nullable|min:10',
+                'client_name' => 'required|min:4|max:150',
+            ]
+        );
+        
+        $formData = $request->all();
+        $newProject = new Project();
+        $newProject->fill($formData);
+        $newProject->slug = Str::slug($newProject->name, '-');
+        $newProject->save();
 
        return redirect()->route('admin.projects.show', ['project' => $newProject->id]);
     }
@@ -81,6 +90,19 @@ class ProjectController extends Controller
      */
     public function update(Request $request,Project $project)
     {
+        $validated = $request->validate(
+            [
+                'name' => [
+                    'required',
+                    'min:4',
+                    'max:150',
+                    Rule::unique('projects')->ignore($project)
+                ],
+                'summary' => 'nullable|min:10',
+                'client_name' => 'required|min:4|max:150',
+            ]
+        );
+
         $formData = $request->all();
         $project->slug = Str::slug($formData['name'], '-');
         $project->update($formData);
