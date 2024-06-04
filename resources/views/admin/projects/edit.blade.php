@@ -11,13 +11,24 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('admin.projects.update', ['project' => $project->id]) }}" method="POST">
+    <form action="{{ route('admin.projects.update', ['project' => $project->id]) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
         <div class="mb-3">
             <label for="name" class="form-label">Nome</label>
             <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $project->name) }}">
+        </div>
+        <div class="mb-3">
+            <label for="cover_image" class="form-label">Immagine</label>
+            <input class="form-control" type="file" id="cover_image" name="cover_image">
+            @if($project->cover_image)
+                <div class="py-2">
+                    <img src="{{ asset('storage/' . $project->cover_image) }}" alt="{{ $project->name }}">
+                </div>
+            @else
+                <p>Nessuan immagine caricata precedentemente</p>
+            @endif
         </div>
         <div class="mb-3">
             <label for="client_name" class="form-label">Nome del cliente</label>

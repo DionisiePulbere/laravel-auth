@@ -2,6 +2,11 @@
 
 @section('content')
     <h2>{{ $project->name }}</h2>
+    @if($project->cover_image)
+        <div>
+            <img src="{{ asset('storage/' . $project->cover_image) }}" alt="{{ $project->name }}">
+        </div>
+    @endif
     <div>
         <strong>ID:</strong> {{ $project->id }}
     </div>
